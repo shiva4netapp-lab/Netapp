@@ -1,11 +1,13 @@
 - name: samba_test_form_1
-  title: Samba Test Form 1
-  description: Working test form
+  description: Basic AnsibleForms test form
   type: ansible
-  playbook: test.yml
+  roles:
+    - admin
+    - public
+  template: test.yml
 
   fields:
-    - name: input
+    - name: input_value
       label: Enter Value
       type: text
       required: true
