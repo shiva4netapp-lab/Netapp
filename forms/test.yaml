@@ -1,0 +1,10 @@
+- name: test_form
+  title: Test Form
+  type: ansible
+  playbook: test.yml
+
+  fields:
+    - name: input
+      label: Enter Value
+      type: text
+      required: true
