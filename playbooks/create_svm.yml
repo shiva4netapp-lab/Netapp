@@ -1,6 +1,6 @@
 ---
-- hosts: localhost
-  name: Create ONTAP SVM
+- name: Create ONTAP SVM
+  hosts: localhost
   gather_facts: false
 
   collections:
@@ -10,9 +10,8 @@
     protocol_list: "{{ allowed_protocols.split(',') | map('trim') | list }}"
 
   tasks:
-
     - name: Show input values
-      debug:
+      ansible.builtin.debug:
         msg:
           - "Cluster: {{ hostname }}"
           - "SVM Name: {{ svm_name }}"
@@ -22,7 +21,7 @@
           - "IPspace: {{ ipspace }}"
 
     - name: Create ONTAP SVM / Vserver
-      na_ontap_svm:
+      netapp.ontap.na_ontap_svm:
         state: present
         name: "{{ svm_name }}"
         root_volume: "{{ svm_name }}_root"
@@ -31,7 +30,6 @@
         allowed_protocols: "{{ protocol_list }}"
         ipspace: "{{ ipspace }}"
         language: C.UTF-8
-
         hostname: "{{ hostname }}"
         username: "{{ username }}"
         password: "{{ password }}"
@@ -39,15 +37,6 @@
         validate_certs: false
       register: svm_result
 
-    - name: Display SVM creation status
-      debug:
-        msg: |
-          SVM creation completed successfully.
-
-          Cluster       : {{ hostname }}
-          SVM Name      : {{ svm_name }}
-          Root Volume   : {{ svm_name }}_root
-          Aggregate     : {{ root_volume_aggregate }}
-          Security      : {{ security_style }}
-          Protocols     : {{ protocol_list }}
-          IPspace       : {{ ipspace }}
+    - name: Show SVM creation result
+      ansible.builtin.debug:
+        var: svm_result
