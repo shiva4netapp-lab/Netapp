@@ -1,0 +1,30 @@
+---
+- hosts: localhost
+  name: Create ONTAP SVM
+  gather_facts: false
+
+  collections:
+    - netapp.ontap
+
+  tasks:
+
+    - name: Create SVM / Vserver
+      na_ontap_svm:
+        state: present
+        name: "{{ svm_name }}"
+        root_volume: "{{ svm_name }}_root"
+        root_volume_aggregate: "{{ root_volume_aggregate }}"
+        root_volume_security_style: "{{ security_style }}"
+        allowed_protocols: "{{ allowed_protocols }}"
+        ipspace: "{{ ipspace }}"
+        language: C.UTF-8
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        https: true
+        validate_certs: false
+      register: svm_create_result
+
+    - name: Display SVM creation result
+      debug:
+        msg: "SVM {{ svm_name }} created/verified successfully"
