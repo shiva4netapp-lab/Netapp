@@ -1,0 +1,31 @@
+---
+- name: Create ONTAP Data LIF
+  hosts: localhost
+  gather_facts: false
+
+  collections:
+    - netapp.ontap
+
+  tasks:
+    - name: Create data LIF for SVM
+      netapp.ontap.na_ontap_interface:
+        state: present
+        interface_name: "{{ lif_name }}"
+        home_port: "{{ port }}"
+        home_node: "{{ node }}"
+        role: data
+        admin_status: up
+        is_auto_revert: true
+        address: "{{ address }}"
+        netmask: "{{ netmask }}"
+        vserver: "{{ vserver }}"
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        https: true
+        validate_certs: false
+      register: lif_result
+
+    - name: Show LIF creation result
+      ansible.builtin.debug:
+        var: lif_result
