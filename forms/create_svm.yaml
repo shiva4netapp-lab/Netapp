@@ -1,6 +1,7 @@
 - name: create_ontap_svm
-  title: Create ONTAP SVM / Vserver
+  title: Create ONTAP SVM
   description: Create new NetApp ONTAP SVM using Ansible
+  category: Samba_Ansibleforms
   type: ansible_playbook
 
   playbook: create_svm.yml
