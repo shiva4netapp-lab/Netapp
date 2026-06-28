@@ -1,0 +1,28 @@
+- name: netapp_list_cluster_nodes
+  description: List NetApp ONTAP Cluster Nodes
+  type: ansible
+  roles:
+    - public
+  categories:
+    - Samba_Ansibleforms
+  playbook: list_cluster_nodes.yml
+  inventory: ""
+
+  fields:
+    - name: hostname
+      label: Cluster Management IP / FQDN
+      type: text
+      required: true
+      placeholder: "Example: 10.10.10.10 or cluster01.domain.com"
+
+    - name: username
+      label: Username
+      type: text
+      required: true
+      default: admin
+
+    - name: password
+      label: Password
+      type: password
+      required: true
+      noLog: true
