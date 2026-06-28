@@ -1,10 +1,12 @@
 - name: samba_test_form_1
-  description: Basic AnsibleForms test form
+  description: Working test form
   type: ansible
   roles:
-    - admin
     - public
-  template: test.yml
+  categories:
+    - Default
+  playbook: test.yml
+  inventory: ""
 
   fields:
     - name: input_value
