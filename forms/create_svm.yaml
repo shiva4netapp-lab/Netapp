@@ -1,0 +1,62 @@
+- name: create_ontap_svm
+  title: Create ONTAP SVM / Vserver
+  description: Create new NetApp ONTAP SVM using Ansible
+  type: ansible_playbook
+
+  playbook: create_svm.yml
+  inventory: localhost
+
+  variables:
+
+    - name: hostname
+      label: ONTAP Cluster IP / Hostname
+      type: text
+      required: true
+
+    - name: username
+      label: ONTAP Username
+      type: text
+      default: admin
+      required: true
+
+    - name: password
+      label: ONTAP Password
+      type: password
+      required: true
+
+    - name: svm_name
+      label: SVM / Vserver Name
+      type: text
+      required: true
+
+    - name: root_volume_aggregate
+      label: Root Volume Aggregate
+      type: text
+      required: true
+
+    - name: security_style
+      label: Root Volume Security Style
+      type: enum
+      required: true
+      values:
+        - unix
+        - ntfs
+        - mixed
+
+    - name: allowed_protocols
+      label: Allowed Protocols
+      type: enum
+      multiple: true
+      required: true
+      values:
+        - nfs
+        - cifs
+        - iscsi
+        - fcp
+        - nvme
+
+    - name: ipspace
+      label: IPspace
+      type: text
+      default: Default
+      required: true
