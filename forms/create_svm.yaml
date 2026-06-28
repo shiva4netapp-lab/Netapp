@@ -46,15 +46,10 @@
 
     - name: allowed_protocols
       label: Allowed Protocols
-      type: enum
-      multiple: true
+      type: text
+      default: nfs,cifs
       required: true
-      values:
-        - nfs
-        - cifs
-        - iscsi
-        - fcp
-        - nvme
+      help: "Enter protocols comma separated. Example: nfs,cifs or iscsi"
 
     - name: ipspace
       label: IPspace
