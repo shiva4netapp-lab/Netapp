@@ -1,58 +1,59 @@
 - name: create_ontap_svm
-  title: Create ONTAP SVM
   description: Create new NetApp ONTAP SVM using Ansible
-  category: Samba_Ansibleforms
-  type: ansible_playbook
-
+  type: ansible
+  roles:
+    - public
+  categories:
+    - Samba_Ansibleforms
   playbook: create_svm.yml
-  inventory: localhost
+  inventory: ""
 
-  variables:
-
+  fields:
     - name: hostname
-      label: ONTAP Cluster IP / Hostname
+      label: Cluster Management IP / FQDN
       type: text
       required: true
 
     - name: username
-      label: ONTAP Username
+      label: Username
       type: text
-      default: admin
       required: true
+      default: admin
 
     - name: password
-      label: ONTAP Password
+      label: Password
       type: password
       required: true
+      noLog: true
 
     - name: svm_name
       label: SVM / Vserver Name
       type: text
       required: true
+      placeholder: svm_nas01
 
     - name: root_volume_aggregate
       label: Root Volume Aggregate
       type: text
       required: true
+      placeholder: aggr1
 
     - name: security_style
       label: Root Volume Security Style
-      type: enum
+      type: text
       required: true
-      values:
-        - unix
-        - ntfs
-        - mixed
+      default: unix
+      placeholder: unix / ntfs / mixed
 
     - name: allowed_protocols
       label: Allowed Protocols
       type: text
-      default: nfs,cifs
       required: true
-      help: "Enter protocols comma separated. Example: nfs,cifs or iscsi"
+      default: nfs,cifs
+      placeholder: nfs,cifs
 
     - name: ipspace
       label: IPspace
       type: text
-      default: Default
       required: true
+      default: Default
