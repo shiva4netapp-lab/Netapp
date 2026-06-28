@@ -1,5 +1,6 @@
 - name: test_form
   title: Test Form
+  description: Simple test form for AnsibleForms validation
   type: ansible
   playbook: test.yml
 
