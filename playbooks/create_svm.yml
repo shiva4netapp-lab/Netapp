@@ -6,7 +6,20 @@
   collections:
     - netapp.ontap
 
+  vars:
+    protocol_list: "{{ allowed_protocols.split(',') | map('trim') | list }}"
+
   tasks:
+
+    - name: Show input values
+      debug:
+        msg:
+          - "Cluster: {{ hostname }}"
+          - "SVM Name: {{ svm_name }}"
+          - "Root Aggregate: {{ root_volume_aggregate }}"
+          - "Security Style: {{ security_style }}"
+          - "Allowed Protocols: {{ protocol_list }}"
+          - "IPspace: {{ ipspace }}"
 
     - name: Create ONTAP SVM / Vserver
       na_ontap_svm:
@@ -15,7 +28,7 @@
         root_volume: "{{ svm_name }}_root"
         root_volume_aggregate: "{{ root_volume_aggregate }}"
         root_volume_security_style: "{{ security_style }}"
-        allowed_protocols: "{{ allowed_protocols }}"
+        allowed_protocols: "{{ protocol_list }}"
         ipspace: "{{ ipspace }}"
         language: C.UTF-8
 
@@ -24,18 +37,17 @@
         password: "{{ password }}"
         https: true
         validate_certs: false
-
       register: svm_result
 
     - name: Display SVM creation status
       debug:
         msg: |
-          SVM creation completed.
+          SVM creation completed successfully.
 
-          Cluster     : {{ hostname }}
-          SVM Name    : {{ svm_name }}
-          Root Volume : {{ svm_name }}_root
-          Aggregate   : {{ root_volume_aggregate }}
-          Security    : {{ security_style }}
-          Protocols   : {{ allowed_protocols }}
-          IPspace     : {{ ipspace }}
+          Cluster       : {{ hostname }}
+          SVM Name      : {{ svm_name }}
+          Root Volume   : {{ svm_name }}_root
+          Aggregate     : {{ root_volume_aggregate }}
+          Security      : {{ security_style }}
+          Protocols     : {{ protocol_list }}
+          IPspace       : {{ ipspace }}
