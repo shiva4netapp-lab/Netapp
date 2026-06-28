@@ -1,0 +1,62 @@
+- name: ontap_simulator_upgrade
+  description: Upgrade NetApp ONTAP Simulator using Ansible
+  type: ansible
+  roles:
+    - public
+  categories:
+    - Samba_Ansibleforms
+  playbook: ontap_upgrade.yml
+  inventory: ""
+
+  fields:
+    - name: hostname
+      label: Cluster Management IP / FQDN
+      type: text
+      required: true
+      placeholder: 192.168.226.100
+
+    - name: username
+      label: Username
+      type: text
+      required: true
+      default: admin
+
+    - name: password
+      label: Password
+      type: password
+      required: true
+      noLog: true
+
+    - name: package_url
+      label: ONTAP Image URL
+      type: text
+      required: true
+      placeholder: http://192.168.226.30/ontap/ONTAP_IMAGE.tgz
+
+    - name: package_version
+      label: Target ONTAP Version
+      type: text
+      required: true
+      placeholder: 9.10.1P12
+
+    - name: download_only
+      label: Download Only
+      type: text
+      required: true
+      default: false
+      placeholder: true or false
+
+    - name: ignore_validation_warning
+      label: Ignore Validation Warning
+      type: text
+      required: true
+      default: true
+      placeholder: true or false
+
+    - name: force_update
+      label: Force Update
+      type: text
+      required: true
+      default: false
+      placeholder: true or false
+``
