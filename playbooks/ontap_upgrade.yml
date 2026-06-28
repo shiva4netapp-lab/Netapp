@@ -1,0 +1,37 @@
+---
+- name: Upgrade NetApp ONTAP Simulator
+  hosts: localhost
+  gather_facts: false
+
+  collections:
+    - netapp.ontap
+
+  tasks:
+
+    - name: Show upgrade input values
+      ansible.builtin.debug:
+        msg:
+          - "Cluster Hostname: {{ hostname }}"
+          - "Package URL: {{ package_url }}"
+          - "Package Version: {{ package_version }}"
+          - "Download Only: {{ download_only }}"
+          - "Ignore Validation Warning: {{ ignore_validation_warning }}"
+
+    - name: Start ONTAP software upgrade
+      netapp.ontap.na_ontap_software_update:
+        state: present
+        package_url: "{{ package_url }}"
+        package_version: "{{ package_version }}"
+        download_only: "{{ download_only | bool }}"
+        ignore_validation_warning: "{{ ignore_validation_warning | bool }}"
+        force_update: "{{ force_update | bool }}"
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        https: true
+        validate_certs: false
+      register: upgrade_result
+
+    - name: Show ONTAP upgrade result
+      ansible.builtin.debug:
+        var: upgrade_result
