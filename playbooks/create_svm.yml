@@ -8,7 +8,7 @@
 
   tasks:
 
-    - name: Create SVM / Vserver
+    - name: Create ONTAP SVM / Vserver
       na_ontap_svm:
         state: present
         name: "{{ svm_name }}"
@@ -18,13 +18,24 @@
         allowed_protocols: "{{ allowed_protocols }}"
         ipspace: "{{ ipspace }}"
         language: C.UTF-8
+
         hostname: "{{ hostname }}"
         username: "{{ username }}"
         password: "{{ password }}"
         https: true
         validate_certs: false
-      register: svm_create_result
 
-    - name: Display SVM creation result
+      register: svm_result
+
+    - name: Display SVM creation status
       debug:
-        msg: "SVM {{ svm_name }} created/verified successfully"
+        msg: |
+          SVM creation completed.
+
+          Cluster     : {{ hostname }}
+          SVM Name    : {{ svm_name }}
+          Root Volume : {{ svm_name }}_root
+          Aggregate   : {{ root_volume_aggregate }}
+          Security    : {{ security_style }}
+          Protocols   : {{ allowed_protocols }}
+          IPspace     : {{ ipspace }}
