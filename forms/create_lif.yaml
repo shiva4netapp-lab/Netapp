@@ -1,0 +1,59 @@
+- name: netapp_create_lif
+  description: Create NetApp ONTAP Data LIF
+  type: ansible
+  roles:
+    - public
+  categories:
+    - Samba_Ansibleforms
+  playbook: create_lif.yml
+  inventory: ""
+
+  fields:
+    - name: hostname
+      label: Cluster Management IP / FQDN
+      type: text
+      required: true
+
+    - name: username
+      label: Username
+      type: text
+      required: true
+      default: admin
+
+    - name: password
+      label: Password
+      type: password
+      required: true
+      noLog: true
+
+    - name: vserver
+      label: SVM / Vserver Name
+      type: text
+      required: true
+
+    - name: lif_name
+      label: LIF Name
+      type: text
+      required: true
+
+    - name: address
+      label: LIF IP Address
+      type: text
+      required: true
+
+    - name: netmask
+      label: Netmask
+      type: text
+      required: true
+      default: 255.255.255.0
+
+    - name: node
+      label: Home Node
+      type: text
+      required: true
+
+    - name: port
+      label: Home Port
+      type: text
+      required: true
+      placeholder: e0c
