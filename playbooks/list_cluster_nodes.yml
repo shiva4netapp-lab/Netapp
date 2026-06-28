@@ -1,0 +1,29 @@
+---
+- name: List ONTAP Cluster Nodes
+  hosts: localhost
+  gather_facts: false
+
+  collections:
+    - netapp.ontap
+
+  tasks:
+    - name: Gather ONTAP cluster node information
+      netapp.ontap.na_ontap_info:
+        state: info
+        gather_subset:
+          - cluster_node_info
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        https: true
+        validate_certs: false
+      register: ontap_info
+
+    - name: Display cluster node names
+      ansible.builtin.debug:
+        msg: "{{ item }}"
+      loop: "{{ ontap_info.ontap_info.cluster_node_info | list }}"
+
+    - name: Display full cluster node information
+      ansible.builtin.debug:
+        var: ontap_info.ontap_info.cluster_node_info
