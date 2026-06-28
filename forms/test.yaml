@@ -1,6 +1,6 @@
-- name: test_form
-  title: Test Form
-  description: Simple test form for AnsibleForms validation
+- name: samba_test_form_1
+  title: Samba Test Form 1
+  description: Working test form
   type: ansible
   playbook: test.yml
 
