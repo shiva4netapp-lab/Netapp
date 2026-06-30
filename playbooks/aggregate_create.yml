@@ -1,0 +1,29 @@
+---
+- hosts: localhost
+  name: Create ONTAP Aggregates
+  gather_facts: false
+  collections:
+    - netapp.ontap
+
+  vars:
+    aggr_list:
+      - { name: "aggr1", node: "vsim-01", disk_count: 5, raid_size: 5 }
+      - { name: "aggr2", node: "vsim-01", disk_count: 5, raid_size: 5 }
+      - { name: "aggr3", node: "vsim-02", disk_count: 5, raid_size: 5 }
+      - { name: "aggr4", node: "vsim-02", disk_count: 5, raid_size: 5 }
+
+  tasks:
+    - name: Create aggregates
+      na_ontap_aggregate:
+        state: "{{ state }}"
+        name: "{{ item.name }}"
+        nodes:
+          - "{{ item.node }}"
+        disk_count: "{{ item.disk_count }}"
+        raid_size: "{{ item.raid_size }}"
+        https: true
+        validate_certs: false
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+      loop: "{{ aggr_list }}"
