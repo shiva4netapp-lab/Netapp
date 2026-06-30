@@ -1,0 +1,29 @@
+name: "Create Aggregates"
+description: "Create ONTAP Aggregates on selected nodes"
+
+playbook: "aggregate_create.yml"
+
+fields:
+
+  - name: hostname
+    label: "Cluster Management IP"
+    type: text
+    required: true
+
+  - name: username
+    label: "Username"
+    type: text
+    required: true
+
+  - name: password
+    label: "Password"
+    type: password
+    required: true
+
+  - name: state
+    label: "State"
+    type: select
+    choices:
+      - present
+      - absent
+    default: present
