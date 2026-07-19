@@ -1,80 +1,22 @@
-- name: Generate HTML Report
-  copy:
-    dest: "/srv/apps/ansibleforms-docker-v6/data/repositories/Netapp/reports/{{ hostname }}_HC_Report.html"
-    content: |
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <title>NetApp Health Check Report</title>
-        <style>
-          body { font-family: Arial; margin: 20px; }
-          h1 { color: #0066cc; }
-          table {
-            border-collapse: collapse;
-            width: 100%;
-          }
-          th {
-            background-color: #0066cc;
-            color: white;
-            padding: 8px;
-            border: 1px solid #ddd;
-          }
-          td {
-            padding: 8px;
-            border: 1px solid #ddd;
-          }
-          .pass { color: green; font-weight: bold; }
-          .review { color: orange; font-weight: bold; }
-          .fail { color: red; font-weight: bold; }
-        </style>
-      </head>
-      <body>
+---
+- name: NetApp Health Check Report
+  hosts: localhost
+  gather_facts: false
 
-      <h1>NetApp ONTAP Health Check Report</h1>
+  tasks:
 
-      <table>
-        <tr>
-          <th>Cluster</th>
-          <td>{{ hostname }}</td>
-        </tr>
-      </table>
+    - name: Generate HTML Report
+      copy:
+        dest: "/srv/apps/ansibleforms-docker-v6/data/repositories/Netapp/reports/{{ hostname }}_HC_Report.html"
+        content: |
+          <!DOCTYPE html>
+          <html>
+          <body>
+          <h1>NetApp Health Check Report</h1>
+          <p>Cluster: {{ hostname }}</p>
+          </body>
+          </html>
 
-      <br>
-
-      <table>
-        <tr>
-          <th>Check Item</th>
-          <th>Status</th>
-        </tr>
-        <tr>
-          <td>Cluster Health</td>
-          <td class="pass">PASS</td>
-        </tr>
-        <tr>
-          <td>Node Health</td>
-          <td class="pass">PASS</td>
-        </tr>
-        <tr>
-          <td>Aggregate Health</td>
-          <td class="pass">PASS</td>
-        </tr>
-        <tr>
-          <td>Volume Health</td>
-          <td class="pass">PASS</td>
-        </tr>
-        <tr>
-          <td>SnapMirror Status</td>
-          <td class="review">REVIEW</td>
-        </tr>
-        <tr>
-          <td>Certificates</td>
-          <td class="review">REVIEW</td>
-        </tr>
-      </table>
-
-      </body>
-      </html>
-
-- name: Show Report Path
-  debug:
-    msg: "Report saved: /srv/apps/ansibleforms-docker-v6/data/repositories/Netapp/reports/{{ hostname }}_HC_Report.html"
+    - name: Show Report Path
+      debug:
+        msg: "Report saved successfully"
