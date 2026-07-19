@@ -1,0 +1,68 @@
+- name: netapp_hc_report_remediation
+  description: Resolve ONTAP Health Check findings
+  type: ansible
+  roles:
+    - public
+  categories:
+    - Samba_Ansibleforms
+  playbook: netapp_hc_report_remediation.yml
+  inventory: ""
+
+  fields:
+    - name: hostname
+      label: Cluster Management IP / FQDN
+      type: text
+      required: true
+
+    - name: username
+      label: Username
+      type: text
+      required: true
+      default: admin
+
+    - name: password
+      label: Password
+      type: password
+      required: true
+      noLog: true
+
+    - name: gather_cluster
+      label: Gather Cluster Health
+      type: checkbox
+      default: true
+
+    - name: gather_nodes
+      label: Gather Node Health
+      type: checkbox
+      default: true
+
+    - name: gather_aggregates
+      label: Gather Aggregate Health
+      type: checkbox
+      default: true
+
+    - name: gather_volumes
+      label: Gather Volume Health
+      type: checkbox
+      default: true
+
+    - name: gather_lifs
+      label: Gather LIF Health
+      type: checkbox
+      default: true
+
+    - name: gather_snapmirror
+      label: Gather SnapMirror Status
+      type: checkbox
+      default: true
+
+    - name: gather_certificates
+      label: Gather Certificate Status
+      type: checkbox
+      default: true
+
+    - name: report_name
+      label: Report Name
+      type: text
+      required: true
+      default: netapp_hc_report.html
