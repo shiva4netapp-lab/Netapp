@@ -1,68 +1,131 @@
-- name: netapp_hc_report_remediation
-  description: Resolve ONTAP Health Check findings
-  type: ansible
-  roles:
-    - public
-  categories:
-    - Samba_Ansibleforms
-  playbook: netapp_hc_report_remediation.yml
-  inventory: ""
+---
+- name: NetApp Health Check Report
+  hosts: localhost
+  gather_facts: false
 
-  fields:
-    - name: hostname
-      label: Cluster Management IP / FQDN
-      type: text
-      required: true
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
 
-    - name: username
-      label: Username
-      type: text
-      required: true
-      default: admin
+  tasks:
 
-    - name: password
-      label: Password
-      type: password
-      required: true
-      noLog: true
+    - name: Get Cluster Information
+      netapp.ontap.na_ontap_rest_info:
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        https: true
+        validate_certs: false
+        gather_subset:
+          - cluster/nodes
+          - storage/aggregates
+          - storage/volumes
+          - network/ip/interfaces
+      register: cluster_info
 
-    - name: gather_cluster
-      label: Gather Cluster Health
-      type: checkbox
-      default: true
+    - name: Get SnapMirror Information
+      netapp.ontap.na_ontap_rest_info:
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        https: true
+        validate_certs: false
+        gather_subset:
+          - snapmirror/relationships
+      register: snapmirror_info
+      ignore_errors: true
 
-    - name: gather_nodes
-      label: Gather Node Health
-      type: checkbox
-      default: true
+    - name: Get Certificate Information
+      netapp.ontap.na_ontap_rest_info:
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        https: true
+        validate_certs: false
+        gather_subset:
+          - security/certificates
+      register: certificate_info
+      ignore_errors: true
 
-    - name: gather_aggregates
-      label: Gather Aggregate Health
-      type: checkbox
-      default: true
+    - name: Generate Health Check Report
+      copy:
+        dest: "/tmp/{{ report_name }}"
+        content: |
+          <!DOCTYPE html>
+          <html>
+          <head>
+              <title>NetApp HC Report</title>
+              <style>
+                body {font-family: Arial;}
+                table {border-collapse: collapse; width: 100%;}
+                th, td {border: 1px solid black; padding: 8px;}
+                th {background-color: #0070C0; color: white;}
+              </style>
+          </head>
+          <body>
 
-    - name: gather_volumes
-      label: Gather Volume Health
-      type: checkbox
-      default: true
+          <h1>ONTAP Health Check Report</h1>
 
-    - name: gather_lifs
-      label: Gather LIF Health
-      type: checkbox
-      default: true
+          <h2>Cluster Nodes</h2>
+          <table>
+          <tr>
+              <th>Node</th>
+              <th>Status</th>
+          </tr>
+          {% for node in cluster_info.ontap_info.cluster_nodes.records %}
+          <tr>
+              <td>{{ node.name }}</td>
+              <td>{{ node.state }}</td>
+          </tr>
+          {% endfor %}
+          </table>
 
-    - name: gather_snapmirror
-      label: Gather SnapMirror Status
-      type: checkbox
-      default: true
+          <h2>Aggregates</h2>
+          <table>
+          <tr>
+              <th>Aggregate</th>
+              <th>State</th>
+              <th>Available %</th>
+          </tr>
+          {% for aggr in cluster_info.ontap_info.storage_aggregates.records %}
+          <tr>
+              <td>{{ aggr.name }}</td>
+              <td>{{ aggr.state }}</td>
+              <td>{{ aggr.space.block_storage.available }}</td>
+          </tr>
+          {% endfor %}
+          </table>
 
-    - name: gather_certificates
-      label: Gather Certificate Status
-      type: checkbox
-      default: true
+          <h2>Volumes</h2>
+          <table>
+          <tr>
+              <th>Volume</th>
+              <th>State</th>
+          </tr>
+          {% for vol in cluster_info.ontap_info.storage_volumes.records %}
+          <tr>
+              <td>{{ vol.name }}</td>
+              <td>{{ vol.state }}</td>
+          </tr>
+          {% endfor %}
+          </table>
 
-    - name: report_name
-      label: Report Name
-      type: text
-      required: true
-      default: netapp_hc_report.html
+          <h2>LIFs</h2>
+          <table>
+          <tr>
+              <th>LIF Name</th>
+              <th>IP Address</th>
+          </tr>
+          {% for lif in cluster_info.ontap_info.network_ip_interfaces.records %}
+          <tr>
+              <td>{{ lif.name }}</td>
+              <td>{{ lif.ip.address }}</td>
+          </tr>
+          {% endfor %}
+          </table>
+
+          </body>
+          </html>
+
+    - name: Display Report Location
+      debug:
+        msg: "Health Check Report generated: /tmp/{{ report_name }}"
