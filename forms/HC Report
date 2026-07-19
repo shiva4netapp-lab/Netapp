@@ -1,0 +1,44 @@
+---
+name: "NetApp HC Report Remediation"
+
+description: "Resolve ONTAP Health Check findings"
+
+fields:
+
+  - name: cluster_name
+    type: text
+    label: Cluster Name
+    required: true
+
+  - name: fix_aggr_capacity
+    type: checkbox
+    label: Root Aggregate Capacity Alert (>95%)
+
+  - name: fix_autosupport
+    type: checkbox
+    label: AutoSupport Failure
+
+  - name: fix_sp
+    type: checkbox
+    label: Service Processor Offline
+
+  - name: check_unmapped_luns
+    type: checkbox
+    label: Check Unmapped LUNs
+
+  - name: check_unused_igroups
+    type: checkbox
+    label: Check Unused igroups
+
+  - name: check_broadcast_domain
+    type: checkbox
+    label: Check Broadcast Domain Issues
+
+  - name: svm_name
+    type: text
+    label: SVM Name
+    required: false
+
+  - name: comments
+    type: textarea
+    label: Comments
