@@ -7,7 +7,7 @@
 
     - name: Generate HTML Report
       copy:
-        dest: "/srv/apps/ansibleforms-docker-v6/data/repositories/Netapp/reports/{{ hostname }}_HC_Report.html"
+        dest: "/root/health_check_report.html"
         content: |
           <!DOCTYPE html>
           <html>
