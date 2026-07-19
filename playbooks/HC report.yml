@@ -1,68 +1,32 @@
-- name: netapp_hc_report_remediation
-  description: Resolve ONTAP Health Check findings
-  type: ansible
-  roles:
-    - public
-  categories:
-    - Samba_Ansibleforms
-  playbook: netapp_hc_report_remediation.yml
-  inventory: ""
+---
+- name: NetApp Health Check Report
+  hosts: localhost
+  gather_facts: false
 
-  fields:
-    - name: hostname
-      label: Cluster Management IP / FQDN
-      type: text
-      required: true
+  tasks:
 
-    - name: username
-      label: Username
-      type: text
-      required: true
-      default: admin
+    - name: Start HC Report
+      debug:
+        msg: "Generating Health Check Report for {{ hostname }}"
 
-    - name: password
-      label: Password
-      type: password
-      required: true
-      noLog: true
+    - name: Create Report
+      copy:
+        dest: "/tmp/{{ report_name }}"
+        content: |
+          ===================================
+          NetApp ONTAP Health Check Report
+          ===================================
 
-    - name: gather_cluster
-      label: Gather Cluster Health
-      type: checkbox
-      default: true
+          Cluster : {{ hostname }}
 
-    - name: gather_nodes
-      label: Gather Node Health
-      type: checkbox
-      default: true
+          Include Nodes      : {{ include_nodes }}
+          Include Aggregates : {{ include_aggrs }}
+          Include Volumes    : {{ include_volumes }}
+          Include LIFs       : {{ include_lifs }}
+          Include SnapMirror : {{ include_snapmirror }}
 
-    - name: gather_aggregates
-      label: Gather Aggregate Health
-      type: checkbox
-      default: true
+          Report Generated Successfully.
 
-    - name: gather_volumes
-      label: Gather Volume Health
-      type: checkbox
-      default: true
-
-    - name: gather_lifs
-      label: Gather LIF Health
-      type: checkbox
-      default: true
-
-    - name: gather_snapmirror
-      label: Gather SnapMirror Status
-      type: checkbox
-      default: true
-
-    - name: gather_certificates
-      label: Gather Certificate Status
-      type: checkbox
-      default: true
-
-    - name: report_name
-      label: Report Name
-      type: text
-      required: true
-      default: netapp_hc_report.html
+    - name: Show Report Path
+      debug:
+        msg: "Report saved to /tmp/{{ report_name }}"
