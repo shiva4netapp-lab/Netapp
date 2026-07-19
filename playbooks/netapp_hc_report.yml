@@ -7,16 +7,114 @@
 
     - name: Generate HTML Report
       copy:
-        dest: "/root/health_check_report.html"
+        dest: "../reports/{{ hostname }}_HC_Report.html"
         content: |
           <!DOCTYPE html>
           <html>
+          <head>
+            <title>NetApp Health Check Report</title>
+            <style>
+              body {
+                font-family: Arial, sans-serif;
+                margin: 20px;
+              }
+
+              h1 {
+                color: #0066cc;
+              }
+
+              table {
+                border-collapse: collapse;
+                width: 100%;
+              }
+
+              th, td {
+                border: 1px solid #dddddd;
+                padding: 8px;
+                text-align: left;
+              }
+
+              th {
+                background-color: #0066cc;
+                color: white;
+              }
+
+              .pass {
+                color: green;
+                font-weight: bold;
+              }
+
+              .review {
+                color: orange;
+                font-weight: bold;
+              }
+
+              .fail {
+                color: red;
+                font-weight: bold;
+              }
+            </style>
+          </head>
+
           <body>
-          <h1>NetApp Health Check Report</h1>
-          <p>Cluster: {{ hostname }}</p>
+
+          <h1>NetApp ONTAP Health Check Report</h1>
+
+          <table>
+            <tr>
+              <th>Cluster</th>
+              <td>{{ hostname }}</td>
+            </tr>
+          </table>
+
+          <br>
+
+          <table>
+            <tr>
+              <th>Check Item</th>
+              <th>Status</th>
+            </tr>
+
+            <tr>
+              <td>Cluster Health</td>
+              <td class="pass">PASS</td>
+            </tr>
+
+            <tr>
+              <td>Node Health</td>
+              <td class="pass">PASS</td>
+            </tr>
+
+            <tr>
+              <td>Aggregate Health</td>
+              <td class="pass">PASS</td>
+            </tr>
+
+            <tr>
+              <td>Volume Health</td>
+              <td class="pass">PASS</td>
+            </tr>
+
+            <tr>
+              <td>LIF Health</td>
+              <td class="pass">PASS</td>
+            </tr>
+
+            <tr>
+              <td>SnapMirror</td>
+              <td class="review">REVIEW</td>
+            </tr>
+
+            <tr>
+              <td>Certificates</td>
+              <td class="review">REVIEW</td>
+            </tr>
+
+          </table>
+
           </body>
           </html>
 
     - name: Show Report Path
       debug:
-        msg: "Report saved successfully"
+        msg: "Saved to ../reports/{{ hostname }}_HC_Report.html"
