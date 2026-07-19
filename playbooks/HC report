@@ -1,0 +1,74 @@
+---
+- name: ONTAP Health Check Remediation
+  hosts: localhost
+  gather_facts: false
+
+  vars:
+    netapp_hostname: "{{ cluster_name }}"
+    netapp_username: "{{ username }}"
+    netapp_password: "{{ password }}"
+
+  collections:
+    - netapp.ontap
+
+  tasks:
+
+    - name: Check Aggregate Capacity
+      netapp.ontap.na_ontap_rest_cli:
+        hostname: "{{ netapp_hostname }}"
+        username: "{{ netapp_username }}"
+        password: "{{ netapp_password }}"
+        validate_certs: false
+        command: "storage aggregate show"
+
+      when: fix_aggr_capacity | default(false)
+
+    - name: Check AutoSupport Status
+      netapp.ontap.na_ontap_rest_cli:
+        hostname: "{{ netapp_hostname }}"
+        username: "{{ netapp_username }}"
+        password: "{{ netapp_password }}"
+        validate_certs: false
+        command: "autosupport check show"
+
+      when: fix_autosupport | default(false)
+
+    - name: Check SP Status
+      netapp.ontap.na_ontap_rest_cli:
+        hostname: "{{ netapp_hostname }}"
+        username: "{{ netapp_username }}"
+        password: "{{ netapp_password }}"
+        validate_certs: false
+        command: "system service-processor show"
+
+      when: fix_sp | default(false)
+
+    - name: Check Unmapped LUNs
+      netapp.ontap.na_ontap_rest_cli:
+        hostname: "{{ netapp_hostname }}"
+        username: "{{ netapp_username }}"
+        password: "{{ netapp_password }}"
+        validate_certs: false
+        command: "lun show -mapped false"
+
+      when: check_unmapped_luns | default(false)
+
+    - name: Check Unused igroups
+      netapp.ontap.na_ontap_rest_cli:
+        hostname: "{{ netapp_hostname }}"
+        username: "{{ netapp_username }}"
+        password: "{{ netapp_password }}"
+        validate_certs: false
+        command: "igroup show"
+
+      when: check_unused_igroups | default(false)
+
+    - name: Check Broadcast Domains
+      netapp.ontap.na_ontap_rest_cli:
+        hostname: "{{ netapp_hostname }}"
+        username: "{{ netapp_username }}"
+        password: "{{ netapp_password }}"
+        validate_certs: false
+        command: "network port broadcast-domain show"
+
+      when: check_broadcast_domain | default(false)
